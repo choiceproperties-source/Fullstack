@@ -777,16 +777,19 @@ export const insertUserSchema = createInsertSchema(users).omit({
   deletedAt: true,
 });
 
-export const insertPropertySchema = createInsertSchema(properties)
-  .omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    deletedAt: true,
-  })
-  .extend({
-    images: z.array(z.string().min(1)).max(25).optional(),
-  });
+export const insertPropertySchema = createInsertSchema(properties, {
+  price: z.coerce.string(),
+  bedrooms: z.coerce.number(),
+  bathrooms: z.coerce.string(),
+  squareFeet: z.coerce.number().optional(),
+  latitude: z.coerce.string().optional(),
+  longitude: z.coerce.string().optional(),
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+});
 
 export const insertPropertyNoteSchema = createInsertSchema(propertyNotes).omit({
   id: true,

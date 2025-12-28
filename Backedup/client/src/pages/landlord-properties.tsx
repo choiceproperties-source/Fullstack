@@ -224,17 +224,34 @@ export default function LandlordProperties() {
     setValue('utilitiesIncluded', updated);
   };
 
-  const onSubmit = async (data: PropertyFormData) => {
+  const onSubmit = async (data: any) => {
     try {
+      console.log('[LANDLORD_PROPERTIES] Submitting form data:', data);
       if (editingId) {
-        await updateProperty(editingId, data);
+        const result = await updateProperty(editingId, data);
+        if (!result) throw new Error('Failed to update property');
+        toast({
+          title: 'Success',
+          description: 'Property updated successfully',
+        });
       } else {
-        await createProperty(data);
+        const result = await createProperty(data);
+        console.log('[LANDLORD_PROPERTIES] Create result:', result);
+        if (!result) throw new Error('Failed to create property');
+        toast({
+          title: 'Success',
+          description: 'Property created successfully',
+        });
       }
       resetForm();
       setShowNewPropertyForm(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving property:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save property',
+        variant: 'destructive',
+      });
     }
   };
 

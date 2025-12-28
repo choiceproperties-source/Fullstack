@@ -134,8 +134,11 @@ export async function createProperty({
   body,
   userId,
 }: CreatePropertyInput): Promise<{ data?: any; error?: string }> {
+  console.log(`[PROPERTY_SERVICE] Creating property for user ${userId}. Body:`, JSON.stringify(body));
+  
   const parsed = insertPropertySchema.safeParse(body);
   if (!parsed.success) {
+    console.error("[PROPERTY_SERVICE] Validation failed:", parsed.error.errors);
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
   }
 
@@ -144,10 +147,14 @@ export async function createProperty({
     owner_id: userId,
   };
 
-  const data = await propertyRepository.createProperty(propertyData as any);
-
-  cache.invalidate("properties:");
-  return { data };
+  try {
+    const data = await propertyRepository.createProperty(propertyData as any);
+    cache.invalidate("properties:");
+    return { data };
+  } catch (err: any) {
+    console.error("[PROPERTY_SERVICE] Repository error:", err);
+    return { error: err.message || "Failed to save property to database" };
+  }
 }
 
 export async function updateProperty(

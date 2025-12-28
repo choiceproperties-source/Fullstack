@@ -127,20 +127,20 @@ export function useOwnedProperties() {
         address: propertyData.address,
         city: propertyData.city,
         state: propertyData.state,
-        zip_code: propertyData.zipCode,  // camelCase → snake_case
-        price: propertyData.price?.toString(),  // Convert to string (decimal in DB)
-        bedrooms: propertyData.bedrooms,  // Keep as number (integer in DB)
-        bathrooms: propertyData.bathrooms?.toString(),  // Convert to string (decimal in DB)
-        square_feet: propertyData.squareFeet,  // camelCase → snake_case
-        property_type: propertyData.propertyType,  // camelCase → snake_case
-        pets_allowed: propertyData.petsAllowed,  // camelCase → snake_case
-        lease_term: propertyData.leaseTerm,  // camelCase → snake_case
-        utilities_included: propertyData.utilitiesIncluded,  // camelCase → snake_case (array)
-        amenities: propertyData.amenities,  // Array of amenity strings
-        images: propertyData.images || [],  // Array of ImageKit URLs ONLY
-        furnished: propertyData.furnished,  // Boolean
-        status: propertyData.status,  // String: 'active' or 'inactive'
-        owner_id: user.id,  // camelCase → snake_case
+        zipCode: propertyData.zipCode,  // Matching schema.ts field name
+        price: propertyData.price?.toString(),
+        bedrooms: propertyData.bedrooms,
+        bathrooms: propertyData.bathrooms?.toString(),
+        squareFeet: propertyData.squareFeet,  // Matching schema.ts field name
+        propertyType: propertyData.propertyType,  // Matching schema.ts field name
+        petsAllowed: propertyData.petsAllowed,  // Matching schema.ts field name
+        leaseTerm: propertyData.leaseTerm,  // Matching schema.ts field name
+        utilitiesIncluded: propertyData.utilitiesIncluded,  // Matching schema.ts field name
+        amenities: propertyData.amenities,
+        images: propertyData.images || [],
+        furnished: propertyData.furnished,
+        status: propertyData.status,
+        ownerId: user.id,  // Matching schema.ts field name
       };
       
       const response = await fetch('/api/v2/properties', {
@@ -201,21 +201,21 @@ export function useOwnedProperties() {
       // Note: price and bathrooms must be strings (decimal fields in DB)
       const normalizedData: any = {};
       
-      // Map camelCase properties to snake_case for backend
+      // Map camelCase properties to schema field names for backend
       if (propertyData.title !== undefined) normalizedData.title = propertyData.title;
       if (propertyData.description !== undefined) normalizedData.description = propertyData.description;
       if (propertyData.address !== undefined) normalizedData.address = propertyData.address;
       if (propertyData.city !== undefined) normalizedData.city = propertyData.city;
       if (propertyData.state !== undefined) normalizedData.state = propertyData.state;
-      if (propertyData.zipCode !== undefined) normalizedData.zip_code = propertyData.zipCode;
-      if (propertyData.price !== undefined) normalizedData.price = propertyData.price?.toString();  // Convert to string (decimal in DB)
+      if (propertyData.zipCode !== undefined) normalizedData.zipCode = propertyData.zipCode;
+      if (propertyData.price !== undefined) normalizedData.price = propertyData.price?.toString();
       if (propertyData.bedrooms !== undefined) normalizedData.bedrooms = propertyData.bedrooms;
-      if (propertyData.bathrooms !== undefined) normalizedData.bathrooms = propertyData.bathrooms?.toString();  // Convert to string (decimal in DB)
-      if (propertyData.squareFeet !== undefined) normalizedData.square_feet = propertyData.squareFeet;
-      if (propertyData.propertyType !== undefined) normalizedData.property_type = propertyData.propertyType;
-      if (propertyData.petsAllowed !== undefined) normalizedData.pets_allowed = propertyData.petsAllowed;
-      if (propertyData.leaseTerm !== undefined) normalizedData.lease_term = propertyData.leaseTerm;
-      if (propertyData.utilitiesIncluded !== undefined) normalizedData.utilities_included = propertyData.utilitiesIncluded;
+      if (propertyData.bathrooms !== undefined) normalizedData.bathrooms = propertyData.bathrooms?.toString();
+      if (propertyData.squareFeet !== undefined) normalizedData.squareFeet = propertyData.squareFeet;
+      if (propertyData.propertyType !== undefined) normalizedData.propertyType = propertyData.propertyType;
+      if (propertyData.petsAllowed !== undefined) normalizedData.petsAllowed = propertyData.petsAllowed;
+      if (propertyData.leaseTerm !== undefined) normalizedData.leaseTerm = propertyData.leaseTerm;
+      if (propertyData.utilitiesIncluded !== undefined) normalizedData.utilitiesIncluded = propertyData.utilitiesIncluded;
       if (propertyData.amenities !== undefined) normalizedData.amenities = propertyData.amenities;
       if (propertyData.images !== undefined) normalizedData.images = propertyData.images;
       if (propertyData.furnished !== undefined) normalizedData.furnished = propertyData.furnished;
