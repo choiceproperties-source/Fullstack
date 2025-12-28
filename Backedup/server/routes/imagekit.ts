@@ -47,6 +47,10 @@ export function registerImageKitRoutes(app: Express): void {
         return res.status(400).json({ error: "Invalid photo category" });
       }
 
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
+      }
+
       if (propertyId) {
         const { data: property, error: propError } = await supabase
           .from("properties")
@@ -103,6 +107,10 @@ export function registerImageKitRoutes(app: Express): void {
         }
       }
 
+      if (!supabase) {
+        throw new Error("Database client not initialized");
+      }
+
       const { data, error } = await supabase
         .from("photos")
         .insert([{
@@ -145,6 +153,10 @@ export function registerImageKitRoutes(app: Express): void {
 
   app.get("/api/photos/property/:propertyId", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
+      }
+
       const { data: property, error: propError } = await supabase
         .from("properties")
         .select("owner_id, listing_agent_id")
@@ -185,6 +197,10 @@ export function registerImageKitRoutes(app: Express): void {
       const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT || "";
       if (!urlEndpoint) {
         return res.json(success([], "No optimized images available (ImageKit not configured)"));
+      }
+
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
       }
 
       const { data: photos, error } = await supabase
@@ -240,6 +256,10 @@ export function registerImageKitRoutes(app: Express): void {
 
       if (!photoId) {
         return res.status(400).json(errorResponse("photoId is required"));
+      }
+
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
       }
 
       const { data: photo, error: photoError } = await supabase
@@ -319,6 +339,10 @@ export function registerImageKitRoutes(app: Express): void {
         return res.status(400).json(errorResponse("orderIndex must be a number"));
       }
 
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
+      }
+
       const { data: photo, error: photoError } = await supabase
         .from("photos")
         .select("id, property_id, uploader_id")
@@ -370,6 +394,10 @@ export function registerImageKitRoutes(app: Express): void {
 
   app.delete("/api/photos/:photoId", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
+      }
+
       const { data: photo, error: photoError } = await supabase
         .from("photos")
         .select("id, property_id, uploader_id, imagekit_file_id, archived")
@@ -418,6 +446,10 @@ export function registerImageKitRoutes(app: Express): void {
     try {
       const { propertyId, action, limit = 100, offset = 0 } = req.query;
 
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
+      }
+
       let query = supabase
         .from("image_audit_logs")
         .select("id, actor_id, actor_role, action, photo_id, property_id, metadata, timestamp, users:actor_id(id, full_name, email, role)", { count: "exact" })
@@ -455,6 +487,10 @@ export function registerImageKitRoutes(app: Express): void {
 
       if (!imageKitFileId || !url) {
         return res.status(400).json(errorResponse("imageKitFileId and url are required"));
+      }
+
+      if (!supabase) {
+        return res.status(500).json(errorResponse("Database client not initialized"));
       }
 
       const { data: photo, error: photoError } = await supabase

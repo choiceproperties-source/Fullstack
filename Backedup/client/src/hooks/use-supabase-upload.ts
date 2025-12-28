@@ -59,6 +59,8 @@ export function useSupabaseUpload(options: UseSupabaseUploadOptions = {}) {
       const fileName = `${timestamp}-${randomStr}-${file.name}`;
       const filePath = `${folder}/${fileName}`;
 
+      console.log(`[UPLOAD] Attempting to upload to bucket: ${bucket}, path: ${filePath}`);
+
       const { data, error } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
@@ -67,6 +69,7 @@ export function useSupabaseUpload(options: UseSupabaseUploadOptions = {}) {
         });
 
       if (error) {
+        console.error('[UPLOAD] Supabase storage error:', error);
         throw new Error(error.message);
       }
 
